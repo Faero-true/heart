@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Интерактивный тест по клиническим ситуациям</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+    .question { margin-bottom: 20px; }
+    .feedback { margin-top: 5px; font-weight: bold; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+    #questions-container { margin-top: 30px; display: none; }
+    select, button { font-size: 1em; padding: 5px; }
+    h2 { margin-top: 40px; }
+  </style>
+  <script type="text/javascript" nonce="3a400e18ae704751bd0a62a1337" src="//injections.adguard.org?ts=1749047885631&amp;type=content-script&amp;dmn=productionstage-hostingstack-serverbucket50ee8d24-18stefou6iti3.s3.amazonaws.com&amp;url=https%3A%2F%2Fproductionstage-hostingstack-serverbucket50ee8d24-18stefou6iti3.s3.amazonaws.com%2Faccred%2Findex.html%3FAWSAccessKeyId%3DASIAZDCUMOBDRLPYLWSJ%26Signature%3DWM9aEtottGWygi9Wd8YRTFfSxAc%253D%26x-amz-security-token%3DIQoJb3JpZ2luX2VjEFgaCXVzLWVhc3QtMSJHMEUCIQCWPFJTkhLOccwpUlJLQecNap5iiZG3WN8ieAJoAVFEFwIgDVDHj2qrVa7lowSpEo95CjQ9Ctb0mjfT%252BJ6rdaFSfnkqggMIMRACGgw2MjUwOTQ3MTc1MTEiDNFhfyl2DIffKBq2ACrfAiW9xrdpisPIVI7ecZFyQISaqqPMhLvY12RISzldT4hC82WxagKmfYnilvcRm1pgIPF%252BdyKSxhYHBIlT05ylNH7scF9%252BI37%252BjyNhZq8i0QtlhVvZFuYBswkrF3Y3qzxBxDDTbrkjL3WjHSFvDicqmFc8Lcthj42ki1AaUQDiY9SoYu3BBMYFXb0ednOTvloVtJsJ5awg7W73pkNUj3wDXevBvhjOFnfr3QrkuzJu5DCQsdo9ECHfMby7KEa6g9vyZtOaPpi5BlPu8evqFGW%252FLYt58FidU83nLNJsDN97s3EJKkbm%252FO0FQ2WycUF3SpN5rmYsvM0oD7ilvxGPqMFAU0uaQa%252BDMqMmZVUFQ4xP%252FPKIvK9Iew6l5AwRqOKPIxrd00fyAROCOPEP2hlfRg7DYIjqapTeWTxTuqpkSf%252FLgAZ%252FETUI9yDj2CsPae9eX4RuBl8RA%252Bn7RitxA%252FdE%252FG1QGDDS14HCBjqeAaQ%252FLux4XT%252BuvyHavMKDqKvOq6l1nPIf2ngp5OmD%252B5LOvbbJJE%252BC6fMWFDUJshI8%252F%252BQHhmvlNSYk2Zy7xK8BSunzP0KnG%252BHHPDztVubf6tmt4GEN60eJY3koTwVOQ3%252Fa4wBfWZDbPURcnb2do9zNMtkGaZVfRPfeJOu1Plb08jjusk6%252BwFlF0GLmFTHH6%252BpDdj5Hh2%252B5ylQe%252BvbAM3kT%26Expires%3D1749057606&amp;app=chrome.exe&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-dnt"></script>
+<script type="text/javascript" nonce="3a400e18ae704751bd0a62a1337" src="//injections.adguard.org?ts=1749047885631&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;name=Web%20of%20Trust&amp;type=user-script"></script><script type="text/javascript" nonce="22e1dd5b30474236862505e5b6a" src="//injections.adguard.org?ts=1748870395803&amp;type=content-script&amp;dmn=productionstage-hostingstack-serverbucket50ee8d24-18stefou6iti3.s3.amazonaws.com&amp;url=https%3A%2F%2Fproductionstage-hostingstack-serverbucket50ee8d24-18stefou6iti3.s3.amazonaws.com%2Faccred%2Findex.html%3FAWSAccessKeyId%3DASIAZDCUMOBDW7YSOSLQ%26Signature%3D1%252Bh4tQE36fO%252FVKCVxzh8nJlH9AM%253D%26x-amz-security-token%3DIQoJb3JpZ2luX2VjECUaCXVzLWVhc3QtMSJHMEUCIQCov27PGQ7bjq08PIXvC%252BV7ywWCB2RknRO2If1x%252FZPJiQIgRZwoyMYTXZdRFP6X2y%252Bw6GRqIkCEMJUXAGsk0z680eoqiwMI7v%252F%252F%252F%252F%252F%252F%252F%252F%252F%252FARACGgw2MjUwOTQ3MTc1MTEiDGH9QJ5Ne1dgsbzUXSrfAhIx%252FO2zTdBI7YGpODOVFusgG0m6Q4tigJNigxPC7kuxvqlMJyAVcDPo%252F%252F0I0QhIh8dElIbHJ6raEgqs3yM5cQw0eCuSpP9MrqMXxUnmXTn8SkDzwIh2UjuldRvqUS%252B9eewVB7vMBRRbwE6fHflH9yicAmmdO3uF%252BSjdpcRKR%252BdRpEdVi3OJq9thHh0SrNEg1A3RPTApxorYHRHCkQw03ioMQmiRVy8NpLUVEX5dP%252B1bym5Y69N9AY6oks0CAMhc45MmL1cpjN75pimH7GVB0Q1GKFZe8O6i9LK3RWizb5avQ9yoTFs7fyXNuV80Y9Qx0iZFafCBap510QQUL4k5J%252FIHhOjYSSghfmnJ9kIAHZX6fC42LfBALqYy8nTryf1icIe6HSUsem9Hd9vmfhvhYinqiOvL6%252BZDALxQGKEiv0OgM%252FO2%252BNSUwNongOXOPPlybjTgdefofQvK%252Bewd4Z4OzTCStPbBBjqeATHzkMGza7cv7Ojsj8oVyGQr76Ybrb6ivu1g1VXNwEpXREBONxAfU8n9SN2xfrLtzF%252FMgScPaH363WIUy6oIQ3Vq1VB2dlJ060QxGP5M6sEexo0Lu1bDsxH7neHnEQpNAn%252BlRYh%252BChg%252BicQUk7z8wAOYiIPXV4vcNEFRPJyROfVxRFuwjRQnF8lH6iubc7pdXysU%252Blj7cAuvuVX9nuCO%26Expires%3D1748874022&amp;app=chrome.exe&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-dnt"></script>
+<script type="text/javascript" nonce="22e1dd5b30474236862505e5b6a" src="//injections.adguard.org?ts=1748870395803&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;name=Web%20of%20Trust&amp;type=user-script"></script><script type="text/javascript" nonce="22e1dd5b30474236862505e5b6a" src="//injections.adguard.org?ts=1748778655078&amp;type=content-script&amp;dmn=productionstage-hostingstack-serverbucket50ee8d24-18stefou6iti3.s3.amazonaws.com&amp;url=https%3A%2F%2Fproductionstage-hostingstack-serverbucket50ee8d24-18stefou6iti3.s3.amazonaws.com%2Faccred%2Findex.html%3FAWSAccessKeyId%3DASIAZDCUMOBD3HCLCWUO%26Signature%3D%252FgILz7kFz9IMP6CfGncBu6YUwdM%253D%26x-amz-security-token%3DIQoJb3JpZ2luX2VjEAwaCXVzLWVhc3QtMSJGMEQCIHvNE4KdrhfYEGNxCGpY5c%252BQ5r9%252FuDtayPqn21uXZTTNAiAQ8r0Ko88UsPauu498jIFD%252BTXhlb%252FPCpGc77%252Fncmi0JyqLAwjV%252F%252F%252F%252F%252F%252F%252F%252F%252F%252F8BEAIaDDYyNTA5NDcxNzUxMSIMSm2QWKyCeksKQpmPKt8CxHOouIsEJ7nyTuoivjgP1F3BzvBVcbRpnNbpwFXdheSN7Ggd%252FEVbj%252BNZ5cAJHXLdQr4YSqDXThh1kWEeqOd1XnU5chjZrAUQOnEz6A0y0UtyztvCbdGFAszF%252BZZNQmR7BRnArZw7kAPLAmrV1hMFPvOTViwvXy3dyrmrkt0pYbaJ5zYfgP4oRcEYK5iMGdw3G3bxbdbS0VUTIc64OVNKgQw23M7DkDd5ZGt6egr7jGSDqkLE3lblHq6O5Lj82sOK7iHW0ZlwLtfxuHPSUaRK5DdqouuNysxL%252FPgUenlM%252BnEiofUcgrNRSPGmzzSG6WwKJbLTwKDBvtV3n7EBRcLH31QuQE4AbOdhumy%252F%252F3H%252BPiE21HK%252FCAdJDlZXP%252BI9p98hXLXBJj7n8nUBbUBXeGlQLYUdN1Z8tGQgUhbQhXMRx76KCHIIrmLvGUGedxmIRmAiVqiM0nKkLJPRhT4XWViLMKGA8cEGOp8B2%252BWbJXo1sFFURfgyWdsPHL0khf4Z5O7P0yWr%252BKUuIKta3T6%252Batey2fzwYHA9Hg4eA8405CpB9mQ5ZUhDXs3Tdr7%252FBTVw%252BEPcdYbbujYKSzL%252F3Kr4%252BEmBmkiN824R2%252BF%252FnUng%252Bcw6tWGs8FKR2BOyuGW0WhyiPQoMycHP6eQpoP8r11JBBWtAffGl6HXMHntduu57%252Bxyw9pI3MlbWY6Cy%26Expires%3D1748786936&amp;app=chrome.exe&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1&amp;stealth=1&amp;st-dnt"></script>
+<script type="text/javascript" nonce="22e1dd5b30474236862505e5b6a" src="//injections.adguard.org?ts=1748778655078&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;name=Web%20of%20Trust&amp;type=user-script"></script><script>
+    // Полный ключ правильных ответов после сверки с «Ответы.docx»
+    const answers = {
+      "1": {
+        "q1": "норма",
+        "q2": "норма (локализованный)",
+        "q3": "нет",
+        "q4": "нет",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "нет",
+        "q11": "нет",
+        "q12": "нет",
+        "q13": "расщепление тона",
+        "q14": "нет",
+        "q15": "нет",
+        "q16": "систолический",
+        "q17": "III тон",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "нет",
+        "q21": "Недостаточность митрального клапана"
+      },
+      "2": {
+        "q1": "норма",
+        "q2": "норма (локализованный)",
+        "q3": "нет",
+        "q4": "нет",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "нет",
+        "q11": "нет",
+        "q12": "нет",
+        "q13": "расщепление тона",
+        "q14": "систолический, усиливающийся на вдохе",
+        "q15": "нет",
+        "q16": "нет",
+        "q17": "нет",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "нет",
+        "q21": "Недостаточность трикуспидального клапана"
+      },
+      "3": {
+        "q1": "норма",
+        "q2": "норма (локализованный)",
+        "q3": "нет",
+        "q4": "нет",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "систолический",
+        "q11": "нет",
+        "q12": "систолический",
+        "q13": "нет",
+        "q14": "систолический",
+        "q15": "нет",
+        "q16": "систолический",
+        "q17": "нет",
+        "q18": "сосуды шеи",
+        "q19": "везикулярное дыхание",
+        "q20": "нет",
+        "q21": "Стеноз аортального клапана"
+      },
+      "4": {
+        "q1": "норма",
+        "q2": "норма (локализованный)",
+        "q3": "нет",
+        "q4": "нет",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "нет",
+        "q11": "нет",
+        "q12": "нет",
+        "q13": "расщепление тона",
+        "q14": "нет",
+        "q15": "нет",
+        "q16": "нет",
+        "q17": "III тон",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "нет",
+        "q21": "Норма"
+      },
+      "5": {
+        "q1": "смещен латерально и вниз",
+        "q2": "норма (локализованный)",
+        "q3": "нет",
+        "q4": "нет",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "систоло-диастолический",
+        "q11": "тон изгнания",
+        "q12": "диастолический",
+        "q13": "нет",
+        "q14": "диастолический",
+        "q15": "нет",
+        "q16": "диастолический",
+        "q17": "нет",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "нет",
+        "q21": "Недостаточность аортального клапана"
+      },
+      "6": {
+        "q1": "нет",
+        "q2": "нет",
+        "q3": "да",
+        "q4": "нет",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "систолический",
+        "q11": "нет",
+        "q12": "систолический",
+        "q13": "тон изгнания",
+        "q14": "систолический",
+        "q15": "нет",
+        "q16": "систолический",
+        "q17": "нет",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "нет",
+        "q21": "Стеноз легочного ствола"
+      },
+      "7": {
+        "q1": "нет",
+        "q2": "нет",
+        "q3": "да",
+        "q4": "да",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "нет",
+        "q11": "нет",
+        "q12": "нет",
+        "q13": "тон изгнания",
+        "q14": "систолический, усиливающийся на вдохе",
+        "q15": "нет",
+        "q16": "диастолический",
+        "q17": "тон открытия",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "влажные хрипы во время вдоха и сухие во время выдоха",
+        "q21": "Митральный стеноз с трикуспидальной недостаточностью"
+      },
+      "8": {
+        "q1": "норма",
+        "q2": "IV тон, длит. верх. толчок, III тон",
+        "q3": "да",
+        "q4": "нет",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "нет",
+        "q11": "нет",
+        "q12": "нет",
+        "q13": "расщепление тона",
+        "q14": "систолический",
+        "q15": "нет",
+        "q16": "систолический",
+        "q17": "III тон, IV тон",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "влажные хрипы во время вдоха и выдоха",
+        "q21": "Острая недостаточность митрального клапана"
+      },
+      "9": {
+        "q1": "нет",
+        "q2": "нет",
+        "q3": "да",
+        "q4": "да",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "нет",
+        "q11": "нет",
+        "q12": "систолический",
+        "q13": "расщепление тона",
+        "q14": "диастолический",
+        "q15": "нет",
+        "q16": "нет",
+        "q17": "нет",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "нет",
+        "q21": "Дефект межпредсердной перегородки"
+      },
+      "10": {
+        "q1": "норма",
+        "q2": "норма (локализованный)",
+        "q3": "нет",
+        "q4": "нет",
+        "q5": "нет",
+        "q6": "симметричный",
+        "q7": "нет",
+        "q8": "симметричный",
+        "q9": "нет",
+        "q10": "нет",
+        "q11": "нет",
+        "q12": "систолический",
+        "q13": "расщепление тона",
+        "q14": "систолический",
+        "q15": "нет",
+        "q16": "систолический",
+        "q17": "нет",
+        "q18": "нет",
+        "q19": "везикулярное дыхание",
+        "q20": "нет",
+        "q21": "Дефект межжелудочковой перегородки"
+      }
+    };
+
+    // Функция проверки ответа на конкретный вопрос
+    function checkAnswer(qName, feedbackId) {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const scenario = document.getElementById("scenario-select").value;
+      if (!selected) return;
+      const userValue = selected.value;
+      const correctValue = answers[scenario][qName];
+      const fb = document.getElementById(feedbackId);
+      if (userValue === correctValue) {
+        fb.textContent = "Правильно!";
+        fb.className = "feedback correct";
+      } else {
+        fb.textContent = "Неправильно. Правильный ответ: " + correctValue;
+        fb.className = "feedback incorrect";
+      }
+    }
+
+    // После выбора ситуации показываем блок с вопросами
+    function onScenarioChange() {
+      const sel = document.getElementById("scenario-select");
+      const container = document.getElementById("questions-container");
+      if (sel.value === "") {
+        container.style.display = "none";
+      } else {
+        // Сбрасываем предыдущие выборы и отзывы
+        const inputs = container.querySelectorAll("input[type=radio]");
+        inputs.forEach(inp => inp.checked = false);
+        const feedbacks = container.querySelectorAll(".feedback");
+        feedbacks.forEach(fb => { fb.textContent = ""; fb.className = "feedback"; });
+        container.style.display = "block";
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("scenario-select").addEventListener("change", onScenarioChange);
+    });
+  </script>
+</head>
+<body>
+
+  <h1>ССС - ГИА для выпускников лечебного факультета 2025</h1>
+  <p>Выберите клиническую ситуацию:</p>
+  <select id="scenario-select">
+    <option value="">-- выберите ситуацию --</option>
+    <option value="1">Ситуация 1: Недостаточность митрального клапана</option>
+    <option value="2">Ситуация 2: Недостаточность трикуспидального клапана</option>
+    <option value="3">Ситуация 3: Стеноз аортального клапана</option>
+    <option value="4">Ситуация 4: Патологии нет (Норма)</option>
+    <option value="5">Ситуация 5: Недостаточность аортального клапана</option>
+    <option value="6">Ситуация 6: Стеноз легочного ствола</option>
+    <option value="7">Ситуация 7: Митральный стеноз с трикуспидальной недостаточностью</option>
+    <option value="8">Ситуация 8: Острая недостаточность митрального клапана</option>
+    <option value="9">Ситуация 9: Дефект межпредсердной перегородки</option>
+    <option value="10">Ситуация 10: Дефект межжелудочковой перегородки</option>
+  </select>
+
+  <div id="questions-container">
+    <h2>Вопросы</h2>
+
+    <!-- Вопрос 1 -->
+    <div class="question">
+      <p><strong>Вопрос 1. Пальпация верхушечного толчка: Локализация:</strong></p>
+      <label><input type="radio" name="q1" value="нет" onclick="checkAnswer('q1','fb1')"> a. нет</label><br>
+      <label><input type="radio" name="q1" value="норма" onclick="checkAnswer('q1','fb1')"> b. норма</label><br>
+      <label><input type="radio" name="q1" value="смещен латерально и вниз" onclick="checkAnswer('q1','fb1')"> c. смещен латерально и вниз</label>
+      <div id="fb1" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 2 -->
+    <div class="question">
+      <p><strong>Вопрос 2. Пальпация верхушечного толчка: Форма:</strong></p>
+      <label><input type="radio" name="q2" value="нет" onclick="checkAnswer('q2','fb2')"> a. нет</label><br>
+      <label><input type="radio" name="q2" value="норма (локализованный)" onclick="checkAnswer('q2','fb2')"> b. норма (локализованный)</label><br>
+      <label><input type="radio" name="q2" value="усиленный" onclick="checkAnswer('q2','fb2')"> c. усиленный</label><br>
+      <label><input type="radio" name="q2" value="продолжительный" onclick="checkAnswer('q2','fb2')"> d. продолжительный</label><br>
+      <label><input type="radio" name="q2" value="IV тон, длит. верх. толчок, III тон" onclick="checkAnswer('q2','fb2')"> e. IV тон, длит. верх. толчок, III тон</label>
+      <div id="fb2" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 3 -->
+    <div class="question">
+      <p><strong>Вопрос 3. Пульсация сердечного толчка определяется пальпаторно:</strong></p>
+      <label><input type="radio" name="q3" value="да" onclick="checkAnswer('q3','fb3')"> a. да</label><br>
+      <label><input type="radio" name="q3" value="нет" onclick="checkAnswer('q3','fb3')"> b. нет</label>
+      <div id="fb3" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 4 -->
+    <div class="question">
+      <p><strong>Вопрос 4. Пульсация магистральных сосудов определяется пальпаторно (2-е межреберье слева):</strong></p>
+      <label><input type="radio" name="q4" value="да" onclick="checkAnswer('q4','fb4')"> a. да</label><br>
+      <label><input type="radio" name="q4" value="нет" onclick="checkAnswer('q4','fb4')"> b. нет</label>
+      <div id="fb4" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 5 -->
+    <div class="question">
+      <p><strong>Вопрос 5. Пульсация магистральных сосудов определяется пальпаторно (2-е межреберье справа):</strong></p>
+      <label><input type="radio" name="q5" value="да" onclick="checkAnswer('q5','fb5')"> a. да</label><br>
+      <label><input type="radio" name="q5" value="нет" onclick="checkAnswer('q5','fb5')"> b. нет</label>
+      <div id="fb5" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 6 -->
+    <div class="question">
+      <p><strong>Вопрос 6. Симметричность пульса на лучевых артериях:</strong></p>
+      <label><input type="radio" name="q6" value="симметричный" onclick="checkAnswer('q6','fb6')"> a. симметричный</label><br>
+      <label><input type="radio" name="q6" value="несимметричный" onclick="checkAnswer('q6','fb6')"> b. несимметричный</label>
+      <div id="fb6" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 7 -->
+    <div class="question">
+      <p><strong>Вопрос 7. Дефицит пульса:</strong></p>
+      <label><input type="radio" name="q7" value="да" onclick="checkAnswer('q7','fb7')"> a. да</label><br>
+      <label><input type="radio" name="q7" value="нет" onclick="checkAnswer('q7','fb7')"> b. нет</label>
+      <div id="fb7" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 8 -->
+    <div class="question">
+      <p><strong>Вопрос 8. Симметричность пульса на бедренных артериях:</strong></p>
+      <label><input type="radio" name="q8" value="симметричный" onclick="checkAnswer('q8','fb8')"> a. симметричный</label><br>
+      <label><input type="radio" name="q8" value="несимметричный" onclick="checkAnswer('q8','fb8')"> b. несимметричный</label>
+      <div id="fb8" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 9 -->
+    <div class="question">
+      <p><strong>Вопрос 9. Признаки коарктации аорты:</strong></p>
+      <label><input type="radio" name="q9" value="да" onclick="checkAnswer('q9','fb9')"> a. да</label><br>
+      <label><input type="radio" name="q9" value="нет" onclick="checkAnswer('q9','fb9')"> b. нет</label>
+      <div id="fb9" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 10 -->
+    <div class="question">
+      <p><strong>Вопрос 10. Аортальный клапан: Шум (фаза):</strong></p>
+      <label><input type="radio" name="q10" value="нет" onclick="checkAnswer('q10','fb10')"> a. нет</label><br>
+      <label><input type="radio" name="q10" value="систолический" onclick="checkAnswer('q10','fb10')"> b. систолический</label><br>
+      <label><input type="radio" name="q10" value="диастолический" onclick="checkAnswer('q10','fb10')"> c. диастолический</label><br>
+      <label><input type="radio" name="q10" value="систоло-диастолический" onclick="checkAnswer('q10','fb10')"> d. систоло-диастолический</label><br>
+      <label><input type="radio" name="q10" value="систолический, усиливающийся на вдохе" onclick="checkAnswer('q10','fb10')"> e. систолический, усиливающийся на вдохе</label>
+      <div id="fb10" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 11 -->
+    <div class="question">
+      <p><strong>Вопрос 11. Аортальный клапан: Дополнительные тоны:</strong></p>
+      <label><input type="radio" name="q11" value="нет" onclick="checkAnswer('q11','fb11')"> a. нет</label><br>
+      <label><input type="radio" name="q11" value="тон изгнания" onclick="checkAnswer('q11','fb11')"> b. тон изгнания</label><br>
+      <label><input type="radio" name="q11" value="расщепление тона" onclick="checkAnswer('q11','fb11')"> c. расщепление тона</label><br>
+      <label><input type="radio" name="q11" value="III тон" onclick="checkAnswer('q11','fb11')"> d. III тон</label><br>
+      <label><input type="radio" name="q11" value="IV тон" onclick="checkAnswer('q11','fb11')"> e. IV тон</label><br>
+      <label><input type="radio" name="q11" value="тон открытия" onclick="checkAnswer('q11','fb11')"> f. тон открытия</label>
+      <div id="fb11" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 12 -->
+    <div class="question">
+      <p><strong>Вопрос 12. Пульмональный клапан: Шум (фаза):</strong></p>
+      <label><input type="radio" name="q12" value="нет" onclick="checkAnswer('q12','fb12')"> a. нет</label><br>
+      <label><input type="radio" name="q12" value="систолический" onclick="checkAnswer('q12','fb12')"> b. систолический</label><br>
+      <label><input type="radio" name="q12" value="диастолический" onclick="checkAnswer('q12','fb12')"> c. диастолический</label><br>
+      <label><input type="radio" name="q12" value="систоло-диастолический" onclick="checkAnswer('q12','fb12')"> d. систоло-диастолический</label><br>
+      <label><input type="radio" name="q12" value="систолический, усиливающийся на вдохе" onclick="checkAnswer('q12','fb12')"> e. систолический, усиливающийся на вдохе</label>
+      <div id="fb12" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 13 -->
+    <div class="question">
+      <p><strong>Вопрос 13. Пульмональный клапан: Дополнительные тоны:</strong></p>
+      <label><input type="radio" name="q13" value="расщепление тона" onclick="checkAnswer('q13','fb13')"> a. расщепление тона</label><br>
+      <label><input type="radio" name="q13" value="тон изгнания" onclick="checkAnswer('q13','fb13')"> b. тон изгнания</label><br>
+      <label><input type="radio" name="q13" value="нет" onclick="checkAnswer('q13','fb13')"> c. нет</label><br>
+      <label><input type="radio" name="q13" value="III тон" onclick="checkAnswer('q13','fb13')"> d. III тон</label><br>
+      <label><input type="radio" name="q13" value="IV тон" onclick="checkAnswer('q13','fb13')"> e. IV тон</label><br>
+      <label><input type="radio" name="q13" value="тон открытия" onclick="checkAnswer('q13','fb13')"> f. тон открытия</label>
+      <div id="fb13" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 14 -->
+    <div class="question">
+      <p><strong>Вопрос 14. Трикуспидальный клапан: Шум (фаза):</strong></p>
+      <label><input type="radio" name="q14" value="нет" onclick="checkAnswer('q14','fb14')"> a. нет</label><br>
+      <label><input type="radio" name="q14" value="систолический" onclick="checkAnswer('q14','fb14')"> b. систолический</label><br>
+      <label><input type="radio" name="q14" value="диастолический" onclick="checkAnswer('q14','fb14')"> c. диастолический</label><br>
+      <label><input type="radio" name="q14" value="систоло-диастолический" onclick="checkAnswer('q14','fb14')"> d. систоло-диастолический</label><br>
+      <label><input type="radio" name="q14" value="систолический, усиливающийся на вдохе" onclick="checkAnswer('q14','fb14')"> e. систолический, усиливающийся на вдохе</label>
+      <div id="fb14" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 15 -->
+    <div class="question">
+      <p><strong>Вопрос 15. Трикуспидальный клапан: Дополнительные тоны:</strong></p>
+      <label><input type="radio" name="q15" value="нет" onclick="checkAnswer('q15','fb15')"> a. нет</label><br>
+      <label><input type="radio" name="q15" value="тон изгнания" onclick="checkAnswer('q15','fb15')"> b. тон изгнания</label><br>
+      <label><input type="radio" name="q15" value="расщепление тона" onclick="checkAnswer('q15','fb15')"> c. расщепление тона</label><br>
+      <label><input type="radio" name="q15" value="III тон" onclick="checkAnswer('q15','fb15')"> d. III тон</label><br>
+      <label><input type="radio" name="q15" value="IV тон" onclick="checkAnswer('q15','fb15')"> e. IV тон</label><br>
+      <label><input type="radio" name="q15" value="тон открытия" onclick="checkAnswer('q15','fb15')"> f. тон открытия</label>
+      <div id="fb15" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 16 -->
+    <div class="question">
+      <p><strong>Вопрос 16. Митральный клапан: Шум (фаза):</strong></p>
+      <label><input type="radio" name="q16" value="нет" onclick="checkAnswer('q16','fb16')"> a. нет</label><br>
+      <label><input type="radio" name="q16" value="систолический" onclick="checkAnswer('q16','fb16')"> b. систолический</label><br>
+      <label><input type="radio" name="q16" value="диастолический" onclick="checkAnswer('q16','fb16')"> c. диастолический</label><br>
+      <label><input type="radio" name="q16" value="систоло-диастолический" onclick="checkAnswer('q16','fb16')"> d. систоло-диастолический</label><br>
+      <label><input type="radio" name="q16" value="систолический, усиливающийся на вдохе" onclick="checkAnswer('q16','fb16')"> e. систолический, усиливающийся на вдохе</label>
+      <div id="fb16" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 17 -->
+    <div class="question">
+      <p><strong>Вопрос 17. Митральный клапан: Дополнительные тоны:</strong></p>
+      <label><input type="radio" name="q17" value="нет" onclick="checkAnswer('q17','fb17')"> a. нет</label><br>
+      <label><input type="radio" name="q17" value="тон изгнания" onclick="checkAnswer('q17','fb17')"> b. тон изгнания</label><br>
+      <label><input type="radio" name="q17" value="расщепление тона" onclick="checkAnswer('q17','fb17')"> c. расщепление тона</label><br>
+      <label><input type="radio" name="q17" value="III тон" onclick="checkAnswer('q17','fb17')"> d. III тон</label><br>
+      <label><input type="radio" name="q17" value="IV тон" onclick="checkAnswer('q17','fb17')"> e. IV тон</label><br>
+      <label><input type="radio" name="q17" value="тон открытия" onclick="checkAnswer('q17','fb17')"> f. тон открытия</label><br>
+      <label><input type="radio" name="q17" value="III тон, IV тон" onclick="checkAnswer('q17','fb17')"> g. III тон, IV тон</label>
+      <div id="fb17" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 18 -->
+    <div class="question">
+      <p><strong>Вопрос 18. Иррадиация шума в другие области:</strong></p>
+      <label><input type="radio" name="q18" value="нет" onclick="checkAnswer('q18','fb18')"> a. нет</label><br>
+      <label><input type="radio" name="q18" value="подмышечная область" onclick="checkAnswer('q18','fb18')"> b. подмышечная область</label><br>
+      <label><input type="radio" name="q18" value="сосуды шеи" onclick="checkAnswer('q18','fb18')"> c. сосуды шеи</label>
+      <div id="fb18" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 19 -->
+    <div class="question">
+      <p><strong>Вопрос 19. Основной дыхательный шум:</strong></p>
+      <label><input type="radio" name="q19" value="везикулярное дыхание" onclick="checkAnswer('q19','fb19')"> a. везикулярное дыхание</label><br>
+      <label><input type="radio" name="q19" value="жесткое дыхание" onclick="checkAnswer('q19','fb19')"> b. жесткое дыхание</label><br>
+      <label><input type="radio" name="q19" value="бронхиальное дыхание" onclick="checkAnswer('q19','fb19')"> c. бронхиальное дыхание</label>
+      <div id="fb19" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 20 -->
+    <div class="question">
+      <p><strong>Вопрос 20. Патологические дыхательные шумы:</strong></p>
+      <label><input type="radio" name="q20" value="нет" onclick="checkAnswer('q20','fb20')"> a. нет</label><br>
+      <label><input type="radio" name="q20" value="сухие свистящие хрипы" onclick="checkAnswer('q20','fb20')"> b. сухие свистящие хрипы</label><br>
+      <label><input type="radio" name="q20" value="влажные хрипы во время вдоха и выдоха" onclick="checkAnswer('q20','fb20')"> c. влажные хрипы во время вдоха и выдоха</label><br>
+      <label><input type="radio" name="q20" value="шум трения плевры" onclick="checkAnswer('q20','fb20')"> d. шум трения плевры</label><br>
+      <label><input type="radio" name="q20" value="влажные хрипы во время вдоха и сухие во время выдоха" onclick="checkAnswer('q20','fb20')"> e. влажные хрипы во время вдоха и сухие во время выдоха</label><br>
+      <label><input type="radio" name="q20" value="влажные хрипы во время вдоха" onclick="checkAnswer('q20','fb20')"> f. влажные хрипы во время вдоха</label>
+      <div id="fb20" class="feedback"></div>
+    </div>
+
+    <!-- Вопрос 21 -->
+    <div class="question">
+      <p><strong>Вопрос 21. Предварительная диагностическая гипотеза:</strong></p>
+      <label><input type="radio" name="q21" value="Недостаточность митрального клапана" onclick="checkAnswer('q21','fb21')"> i. Недостаточность митрального клапана</label><br>
+      <label><input type="radio" name="q21" value="Дефект межпредсердной перегородки" onclick="checkAnswer('q21','fb21')"> a. Дефект межпредсердной перегородки</label><br>
+      <label><input type="radio" name="q21" value="Митральный стеноз с трикуспидальной недостаточностью" onclick="checkAnswer('q21','fb21')"> b. Митральный стеноз с трикуспидальной недостаточностью</label><br>
+      <label><input type="radio" name="q21" value="Недостаточность трикуспидального клапана" onclick="checkAnswer('q21','fb21')"> c. Недостаточность трикуспидального клапана</label><br>
+      <label><input type="radio" name="q21" value="Стеноз аортального клапана" onclick="checkAnswer('q21','fb21')"> d. Стеноз аортального клапана</label><br>
+      <label><input type="radio" name="q21" value="Норма" onclick="checkAnswer('q21','fb21')"> e. Норма</label><br>
+      <label><input type="radio" name="q21" value="Стеноз легочного ствола" onclick="checkAnswer('q21','fb21')"> f. Стеноз легочного ствола</label><br>
+      <label><input type="radio" name="q21" value="Дефект межжелудочковой перегородки" onclick="checkAnswer('q21','fb21')"> g. Дефект межжелудочковой перегородки</label><br>
+      <label><input type="radio" name="q21" value="Недостаточность аортального клапана" onclick="checkAnswer('q21','fb21')"> h. Недостаточность аортального клапана</label><br>
+      <label><input type="radio" name="q21" value="Острая недостаточность митрального клапана" onclick="checkAnswer('q21','fb21')"> i. Острая недостаточность митрального клапана</label>
+      <div id="fb21" class="feedback"></div>
+    </div>
+
+  </div>
+</body>
+</html>
